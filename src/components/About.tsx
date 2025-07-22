@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useCounterAnimation } from "@/hooks/useCounterAnimation";
+import { useState, useEffect, useRef } from "react";
 import { 
   Award, 
   Users2, 
@@ -9,6 +11,40 @@ import {
 } from "lucide-react";
 
 const About = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  const statsData = [
+    { number: 5, suffix: "+", label: "Years Experience" },
+    { number: 50, suffix: "+", label: "Team Members" },
+    { number: 500, suffix: "+", label: "Happy Clients" },
+    { number: 15, suffix: "", label: "Awards Won" }
+  ];
+
+  const yearsCount = useCounterAnimation(5, 2000, isVisible);
+  const membersCount = useCounterAnimation(50, 2200, isVisible);
+  const clientsCount = useCounterAnimation(500, 2500, isVisible);
+  const awardsCount = useCounterAnimation(15, 1800, isVisible);
+
+  const animatedCounts = [yearsCount, membersCount, clientsCount, awardsCount];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const values = [
     {
       icon: <Lightbulb className="h-6 w-6" />,
@@ -79,18 +115,16 @@ const About = () => {
           {/* Right Content */}
           <div className="space-y-8">
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                { number: "5+", label: "Years Experience" },
-                { number: "50+", label: "Team Members" },
-                { number: "500+", label: "Happy Clients" },
-                { number: "15", label: "Awards Won" }
-              ].map((stat, index) => (
-                <Card key={index} className="p-6 text-center border-0 bg-muted/50">
-                  <div className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-                    {stat.number}
+            <div ref={statsRef} className="grid grid-cols-2 gap-6">
+              {statsData.map((stat, index) => (
+                <Card 
+                  key={index} 
+                  className="p-6 text-center border-0 bg-muted/30 hover:bg-muted/50 hover:scale-105 transition-all duration-300 cursor-pointer group"
+                >
+                  <div className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                    {animatedCounts[index]}{stat.suffix}
                   </div>
-                  <div className="text-muted-foreground text-sm">
+                  <div className="text-muted-foreground text-sm group-hover:text-foreground transition-colors duration-300">
                     {stat.label}
                   </div>
                 </Card>
