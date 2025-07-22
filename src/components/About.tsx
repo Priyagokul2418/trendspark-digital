@@ -119,7 +119,7 @@ const About = () => {
               {statsData.map((stat, index) => (
                 <Card 
                   key={index} 
-                  className="p-6 text-center border-0 bg-muted/30 hover:bg-muted/50 hover:scale-105 transition-all duration-300 cursor-pointer group"
+                  className="p-6 text-center border-0 bg-muted/80 hover:bg-muted/90 hover:scale-105 transition-all duration-300 cursor-pointer group"
                 >
                   <div className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
                     {animatedCounts[index]}{stat.suffix}
